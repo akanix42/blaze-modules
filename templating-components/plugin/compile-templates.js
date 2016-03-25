@@ -3,7 +3,7 @@ Plugin.registerCompiler({
   archMatching: 'web',
   isTemplate: true
 }, () => new CachingHtmlCompiler(
-  "templating",
+  "templating-components",
   TemplatingTools.scanHtmlForTags,
   TemplatingTools.compileTagsWithSpacebars
 ));

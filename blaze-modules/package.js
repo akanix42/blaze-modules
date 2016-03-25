@@ -21,6 +21,6 @@ Package.onUse(function(api) {
     'spacebars', // XXX COMPAT WITH PACKAGES BUILT FOR 0.9.0
 
     // Compile .html files into Blaze reactive views
-    'nathantreid:templating@0.0.1'
+    'nathantreid:templating-components@0.0.1'
   ]);
 });

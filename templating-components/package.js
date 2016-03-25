@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Allows templates to be defined in .html files",
-  name: 'nathantreid:templating',
+  name: 'nathantreid:templating-components',
   version: '0.0.1'
   // last MDG version: '1.1.7-rc.12'
 });
@@ -19,8 +19,8 @@ Package.registerBuildPlugin({
   // XXX maybe uglify should be applied by this plugin instead of via magic
   // weak dependency.
   use: [
-    'ecmascript',
     'nathantreid:caching-html-compiler@0.0.1',
+    'ecmascript@0.4.1-rc.12',
     'nathantreid:templating-tools@0.0.1'
   ],
   sources: [
@@ -32,11 +32,11 @@ Package.registerBuildPlugin({
 Package.onUse(function (api) {
   // XXX would like to do the following only when the first html file
   // is encountered
-
+  api.use('nathantreid:templating-wrapper@0.0.1');
   api.addFiles('templating.js', 'client');
   api.export('Template', 'client');
 
-  api.use('underscore'); // only the subset in packages/blaze/microscore.js
+  api.use('underscore@1.0.6-rc.12'); // only the subset in packages/blaze/microscore.js
 
   api.use('isobuild:compiler-plugin@1.0.0');
 
@@ -45,6 +45,4 @@ Package.onUse(function (api) {
   // 'meteor' and 'blaze'.
   api.use(['blaze', 'spacebars']);
   api.imply(['meteor', 'blaze', 'spacebars'], 'client');
-
-  api.addFiles(['dynamic.html', 'dynamic.js'], 'client');
 });
