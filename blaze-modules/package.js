@@ -1,6 +1,6 @@
 Package.describe({
   name: 'nathantreid:blaze-modules',
-  version: '0.0.1',
+  version: '0.0.2',
   // last MDG version: '1.0.2-rc.12',
   summary: 'Blaze Templates and Components - Compile HTML templates into reactive UI with Meteor Blaze',
   documentation: 'README.md',
@@ -19,6 +19,6 @@ Package.onUse(function(api) {
     'spacebars@1.0.9-rc.12', // XXX COMPAT WITH PACKAGES BUILT FOR 0.9.0
 
     // Compile .html files into Blaze reactive views
-    'nathantreid:templating-components@0.0.1'
+    'nathantreid:templating-components@0.0.2'
   ]);
 });
