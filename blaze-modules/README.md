@@ -1,9 +1,32 @@
-# blaze-html-templates
+# blaze-modules
 
-A meta-package that includes everything you need to compile and run Meteor templates and components with Spacebars and Blaze.
+Enables ES 2015 imports for Blaze templates using the `<component>` tag.
+Normal Blaze template are unaffected (you can use both in the same project).
 
-For more details, see the documentation of the component packages:
+## Installation
+`meteor remove blaze-html-template`
+`meteor add nathantreid:blaze-modules`
 
-- [templating-components](https://atmospherejs.com/meteor/templating): compiles `.html` files
-- [blaze](https://atmospherejs.com/meteor/blaze): the runtime library
-- [spacebars](https://atmospherejs.com/meteor/spacebars): the templating language
+## Example usage:
+
+component1.html
+``` handlebars
+<component name="component1">
+Testing {{> component2}}
+</component>
+```
+
+component2.html
+``` handlebars
+<component name="component2">
+1 2 3.
+</component>
+```
+
+component1.js
+``` js
+import component1 from './component1.html';
+import component2 from './component2.html';
+
+component1.helpers{{ component2 });
+```
