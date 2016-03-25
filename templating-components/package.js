@@ -1,8 +1,9 @@
 Package.describe({
   summary: "Allows templates to be defined in .html files",
   name: 'nathantreid:templating-components',
-  version: '0.0.1'
+  version: '0.0.1',
   // last MDG version: '1.1.7-rc.12'
+  git:'https://github.com/nathantreid/blaze-modules'
 });
 
 // Today, this package is closely intertwined with Handlebars, meaning

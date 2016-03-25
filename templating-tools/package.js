@@ -2,12 +2,8 @@ Package.describe({
   name: 'nathantreid:templating-tools',
   version: '0.0.1',
   // last MDG version: '1.0.2-rc.12',
-  // Brief, one-line summary of the package.
   summary: 'Tools to scan HTML and compile tags when building a templating package',
-  // URL to the Git repository containing the source code for this package.
-  git: 'https://github.com/meteor/meteor',
-  // By default, Meteor will default to using README.md for documentation.
-  // To avoid submitting documentation, set this field to null.
+  git:'https://github.com/nathantreid/blaze-modules',
   documentation: 'README.md'
 });
 

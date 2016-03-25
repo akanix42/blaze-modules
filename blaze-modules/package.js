@@ -2,11 +2,9 @@ Package.describe({
   name: 'nathantreid:blaze-modules',
   version: '0.0.1',
   // last MDG version: '1.0.2-rc.12',
-  // Brief, one-line summary of the package.
-  summary: 'Compile HTML templates into reactive UI with Meteor Blaze',
-  // By default, Meteor will default to using README.md for documentation.
-  // To avoid submitting documentation, set this field to null.
-  documentation: 'README.md'
+  summary: 'Blaze Templates and Components - Compile HTML templates into reactive UI with Meteor Blaze',
+  documentation: 'README.md',
+  git:'https://github.com/nathantreid/blaze-modules'
 });
 
 Package.onUse(function(api) {
