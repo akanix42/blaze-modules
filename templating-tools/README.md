@@ -1,11 +1,6 @@
 # templating-tools
 
-Has some conveniently abstracted functions that are used together with the `caching-html-compiler` package to implement different template compilers:
-
-1. `templating`
-2. `static-html`
-
-These functions contain some code shared between the above build plugins, and if you are building your own build plugin they can be useful too. But they aren't guaranteed to be helpful for every use case, so you should carefully decide if they are appropriate for your package.
+Has some conveniently abstracted functions that are used together with the `nathantreid:caching-html-compiler` package to implement the `templating-components` compiler.
 
 ---------
 
@@ -40,15 +35,17 @@ Transform an array of tags into a result object of the following form:
   head: String,
   bodyAttrs: {
     [attrName]: String
-  }
+  },
+  hasModule: Boolean
 }
 ```
 
-1. The contents of every `<template>` and `<body>` tag will be compiled into JavaScript with `spacebars-compiler`, and the code appended to the `js` field of the result.
+1. The contents of every `<template>`, `<component>` and `<body>` tag will be compiled into JavaScript with `spacebars-compiler`, and the code appended to the `js` field of the result.
 2. The contents of every `<head>` tag will be concatenated into the `head` field of the result.
 3. Any attributes found on `<body>` tags will be added to the `bodyAtts` field of the result.
-4. Every `<template>` tag is required to have a `name` attribute, and no other attributes.
+4. Every `<template>` and `<component>` tag is required to have a `name` attribute, and no other attributes.
 5. The `<head>` tag is not allowed to have any attributes.
+5. Only one `<component>` tag is allowed per file.
 
 ### TemplatingTools.CompileError
 

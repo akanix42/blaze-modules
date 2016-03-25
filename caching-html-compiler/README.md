@@ -18,7 +18,7 @@ Constructs a new CachingHtmlCompiler that can be passed into `Plugin.registerCom
 
 1. `name` The name of the compiler, used when printing errors. Should probably be the same as the name of the build plugin and package it is used in.
 2. `tagScannerFunc` A function that takes a string representing a template file as input, and returns an array of Tag objects. See the README for `templating-tools` for more information about the Tag object.
-3. `tagHandlerFunc` A function that takes an array of Tag objects (the output of the previous argument) and returns an object with `js`, `body`, `head`, and `bodyAttr` properties, which will be added to the app through the build plugin API.
+3. `tagHandlerFunc` A function that takes an array of Tag objects (the output of the previous argument) and returns an object with `hasModule`, `js`, `body`, `head`, and `bodyAttr` properties, which will be added to the app through the build plugin API.
 
 #### Example
 
