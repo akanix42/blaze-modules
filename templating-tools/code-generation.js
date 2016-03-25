@@ -9,6 +9,18 @@ Template[${nameLiteral}] = new Template(${templateDotNameLiteral}, ${renderFuncC
 `;
 }
 
+TemplatingTools.generateComponentJS =
+function generateComponentJS(name, renderFuncCode) {
+  const nameLiteral = JSON.stringify(name);
+  const templateDotNameLiteral = JSON.stringify(`Template.${name}`);
+
+  return `
+Template.__checkComponentName(${nameLiteral});
+const component = new Template(${templateDotNameLiteral}, ${renderFuncCode});
+export default component;
+`;
+}
+
 TemplatingTools.generateBodyJS =
 function generateBodyJS(renderFuncCode) {
   return `

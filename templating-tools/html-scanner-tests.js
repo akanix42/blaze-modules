@@ -43,6 +43,17 @@ Tinytest.add("templating-tools - html scanner", function (test) {
       ', (function() {\n  var view = this;\n  return ' + content + ';\n}));\n';
   };
 
+  // arguments are quoted strings like '"hello"'
+  var simpleComponent = function (templateName, content) {
+    // '"hello"' into '"Template.hello"'
+    var viewName = templateName.slice(0, 1) + 'Template.' + templateName.slice(1);
+
+    return '\nTemplate.__checkComponentName(' + templateName + ');\n' +
+      'const component = new Template(' + viewName +
+      ', (function() {\n  var view = this;\n  return ' + content + ';\n}));\n' +
+      'export default component;\n';
+  };
+
   var checkResults = function(results, expectJs, expectHead, expectBodyAttrs) {
     test.equal(results.body, '');
     test.equal(results.js, expectJs || '');
@@ -54,7 +65,7 @@ Tinytest.add("templating-tools - html scanner", function (test) {
     const tags = TemplatingTools.scanHtmlForTags({
       sourceName: "",
       contents: contents,
-      tagNames: ["body", "head", "template"]
+      tagNames: ["body", "head", "template", "component"]
     });
 
     return TemplatingTools.compileTagsWithSpacebars(tags);
@@ -155,6 +166,64 @@ Tinytest.add("templating-tools - html scanner", function (test) {
     return scanForTest(
       "\n\n<template>Hi</template>\n\n<template>Hi</template>");
   }, "name", 3);
+
+
+  // head, body, and component
+  checkResults(
+    scanForTest("<head>\n<title>Hello</title>\n</head>\n\n<body>World</body>\n\n"+
+      '<component name="favoritefood">\n  pizza\n</component>\n'),
+    simpleBody('"World"') + simpleComponent('"favoritefood"', '"pizza"'),
+    "<title>Hello</title>");
+
+  // head, body, template, and component
+  checkResults(
+    scanForTest("<head>\n<title>Hello</title>\n</head>\n\n<body>World</body>\n\n"+
+      '<template name="favoritefood">\n  pizza\n</template>\n'+
+      '<component name="favoritefood">\n  pizza\n</component>\n'),
+    simpleBody('"World"') + simpleTemplate('"favoritefood"', '"pizza"') + simpleComponent('"favoritefood"', '"pizza"'),
+    "<title>Hello</title>");
+
+  // one-line component
+  checkResults(
+    scanForTest('<component name="favoritefood">pizza</component>'),
+    simpleComponent('"favoritefood"', '"pizza"'));
+
+  // component with other attributes
+  checkResults(
+    scanForTest('<component foo="bar" name="favoritefood" baz="qux">'+
+      'pizza</component>'),
+    simpleComponent('"favoritefood"', '"pizza"'));
+
+  // whitespace around '=' in attributes and at end of tag
+  checkResults(
+    scanForTest('<component foo = "bar" name  ="favoritefood" baz= "qux"  >'+
+      'pizza</component\n\n>'),
+    simpleComponent('"favoritefood"', '"pizza"'));
+
+  // whitespace around component name
+  checkResults(
+    scanForTest('<component name=" favoritefood  ">pizza</component>'),
+    simpleComponent('"favoritefood"', '"pizza"'));
+
+  // single quotes around component name
+  checkResults(
+    scanForTest('<component name=\'the "cool" component\'>'+
+      'pizza</component>'),
+    simpleComponent('"the \\"cool\\" component"', '"pizza"'));
+
+  checkResults(scanForTest('<body foo="bar">\n  Hello\n</body>'), simpleBody('"Hello"'), "", {foo: "bar"});
+
+  // unnamed component
+  checkError(function() {
+    return scanForTest(
+      "\n\n<component>Hi</component>\n\n<component>Hi</component>");
+  }, "name", 3);
+
+  // multiple component
+  checkError(function() {
+    return scanForTest(
+      "\n\n<component name='test'>Hi</component>\n\n<component name='test2'>Hi</component>");
+  }, "Only one component allowed per file", 5);
 
   // helpful doctype message
   checkError(function() {

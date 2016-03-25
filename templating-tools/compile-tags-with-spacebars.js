@@ -14,7 +14,8 @@ class SpacebarsTagCompiler {
       head: '',
       body: '',
       js: '',
-      bodyAttrs: {}
+      bodyAttrs: {},
+      hasModule: false
     };
   }
 
@@ -59,6 +60,8 @@ class SpacebarsTagCompiler {
 
         this.results.js += TemplatingTools.generateTemplateJS(
           name, renderFuncCode);
+      }else if (this.tag.tagName === "component") {
+        this.processComponent();
       } else if (this.tag.tagName === "body") {
         this.addBodyAttrs(this.tag.attribs);
 
@@ -70,7 +73,7 @@ class SpacebarsTagCompiler {
         // We may be one of many `<body>` tags.
         this.results.js += TemplatingTools.generateBodyJS(renderFuncCode);
       } else {
-        this.throwCompileError("Expected <template>, <head>, or <body> tag in template file", tagStartIndex);
+        this.throwCompileError("Expected <template>, <component>, <head>, or <body> tag in template file", tagStartIndex);
       }
     } catch (e) {
       if (e.scanner) {
@@ -80,6 +83,32 @@ class SpacebarsTagCompiler {
         throw e;
       }
     }
+  }
+
+  processComponent(filePath){
+    const name = this.tag.attribs.name;
+
+    if (!name) {
+      this.throwCompileError("Component has no 'name' attribute");
+    }
+
+    if (SpacebarsCompiler.isReservedName(name)) {
+      this.throwCompileError(`Component can't be named "${name}"`);
+    }
+
+    if (this.results.hasModule) {
+      this.throwCompileError('Only one component allowed per file')
+    }
+
+    const renderFuncCode = SpacebarsCompiler.compile(this.tag.contents, {
+      isTemplate: true,
+      sourceName: `Component "${name}"`
+    });
+
+    this.results.js += TemplatingTools.generateComponentJS(
+      name, renderFuncCode);
+
+    this.results.hasModule = true;
   }
 
   addBodyAttrs(attrs) {

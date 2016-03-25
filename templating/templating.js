@@ -23,6 +23,12 @@ Template.__checkName = function (name) {
   }
 };
 
+Template.__checkComponentName = function (name) {
+  if (name === 'body' || _.contains(RESERVED_TEMPLATE_NAMES, name)) {
+    throw new Error("This component name is reserved: " + name);
+  }
+};
+
 // XXX COMPAT WITH 0.8.3
 Template.__define__ = function (name, renderFunc) {
   Template.__checkName(name);

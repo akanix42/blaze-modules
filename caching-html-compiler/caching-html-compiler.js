@@ -55,7 +55,7 @@ CachingHtmlCompiler = class CachingHtmlCompiler extends CachingCompiler {
       const tags = this.tagScannerFunc({
         sourceName: inputPath,
         contents: contents,
-        tagNames: ["body", "head", "template"]
+        tagNames: ["body", "head", "template", "component"]
       });
 
       return this.tagHandlerFunc(tags);
@@ -134,7 +134,7 @@ CachingHtmlCompiler = class CachingHtmlCompiler extends CachingCompiler {
 
       inputFile.addJavaScript({
         path: path.join(pathPart, "template." + basename + ".js"),
-        data: allJavaScript
+        data: compileResult.hasModule ? Babel.compile(allJavaScript).code : allJavaScript
       });
     }
   }
