@@ -9,9 +9,9 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use([
-    'underscore',
-    'ecmascript',
-    'spacebars-compiler',
+    'underscore@1.0.6-rc.12',
+    'ecmascript@0.4.1-rc.12',
+    'spacebars-compiler@1.0.9-rc.12',
 
     // minifier-js is a weak dependency of spacebars-compiler; adding it here
     // ensures that the output is minified.  (Having it as a weak dependency means
@@ -19,7 +19,7 @@ Package.onUse(function(api) {
     // boilerplate-generator uses spacebars-compiler.)
     // XXX maybe uglify should be applied by this plugin instead of via magic
     // weak dependency.
-    'minifier-js'
+    'minifier-js@1.1.9-rc.12'
   ]);
 
   api.addFiles([
@@ -36,8 +36,8 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use([
     'tinytest',
-    'ecmascript'
     'nathantreid:templating-tools',
+    'ecmascript@0.4.1-rc.12'
   ]);
 
   api.addFiles('html-scanner-tests.js', 'server');

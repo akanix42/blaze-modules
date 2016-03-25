@@ -10,13 +10,13 @@ Package.describe({
 Package.onUse(function(api) {
   api.imply([
     // A library for reactive user interfaces
-    'blaze',
+    'blaze@2.1.5-rc.12',
 
     // The following packages are basically empty shells that just exist to
     // satisfy code checking for the existence of a package. Rest assured that
     // they are not adding any bloat to your bundle.
-    'ui', // XXX COMPAT WITH PACKAGES BUILT FOR 0.9.0.
-    'spacebars', // XXX COMPAT WITH PACKAGES BUILT FOR 0.9.0
+    'ui@1.0.9-rc.12', // XXX COMPAT WITH PACKAGES BUILT FOR 0.9.0.
+    'spacebars@1.0.9-rc.12', // XXX COMPAT WITH PACKAGES BUILT FOR 0.9.0
 
     // Compile .html files into Blaze reactive views
     'nathantreid:templating-components@0.0.1'

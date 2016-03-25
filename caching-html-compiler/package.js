@@ -12,10 +12,12 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.use([
-    'underscore',
-    'caching-compiler',
-    'ecmascript'
+    'underscore@1.0.6-rc.12',
+    'caching-compiler@1.0.2-rc.12',
     'nathantreid:templating-tools@0.0.1',
+    'ecmascript@0.4.1-rc.12',
+    'babel-compiler@6.5.2-rc.7',
+
   ]);
 
   api.addFiles('caching-html-compiler.js', 'server');
