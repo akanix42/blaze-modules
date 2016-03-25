@@ -1,6 +1,7 @@
 Package.describe({
-  name: 'templating-tools',
-  version: '1.0.2-rc.12',
+  name: 'nathantreid:templating-tools',
+  version: '0.0.1',
+  // last MDG version: '1.0.2-rc.12',
   // Brief, one-line summary of the package.
   summary: 'Tools to scan HTML and compile tags when building a templating package',
   // URL to the Git repository containing the source code for this package.
@@ -39,8 +40,8 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use([
     'tinytest',
-    'templating-tools',
     'ecmascript'
+    'nathantreid:templating-tools',
   ]);
 
   api.addFiles('html-scanner-tests.js', 'server');

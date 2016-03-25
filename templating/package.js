@@ -1,6 +1,8 @@
 Package.describe({
   summary: "Allows templates to be defined in .html files",
-  version: '1.1.7-rc.12'
+  name: 'nathantreid:templating',
+  version: '0.0.1'
+  // last MDG version: '1.1.7-rc.12'
 });
 
 // Today, this package is closely intertwined with Handlebars, meaning
@@ -17,9 +19,9 @@ Package.registerBuildPlugin({
   // XXX maybe uglify should be applied by this plugin instead of via magic
   // weak dependency.
   use: [
-    'caching-html-compiler',
     'ecmascript',
-    'templating-tools'
+    'nathantreid:caching-html-compiler@0.0.1',
+    'nathantreid:templating-tools@0.0.1'
   ],
   sources: [
     'plugin/compile-templates.js'

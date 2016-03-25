@@ -1,5 +1,7 @@
 Package.describe({
-  version: '1.0.4-rc.12',
+  name: 'nathantreid:caching-html-compiler',
+  version: '0.0.1',
+  // last MDG version: '1.0.4-rc.12',
   // Brief, one-line summary of the package.
   summary: 'Pluggable class for compiling HTML into templates',
   // By default, Meteor will default to using README.md for documentation.
@@ -11,8 +13,8 @@ Package.onUse(function(api) {
   api.use([
     'underscore',
     'caching-compiler',
-    'templating-tools',
     'ecmascript'
+    'nathantreid:templating-tools@0.0.1',
   ]);
 
   api.addFiles('caching-html-compiler.js', 'server');

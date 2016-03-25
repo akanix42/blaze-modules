@@ -1,6 +1,7 @@
 Package.describe({
-  name: 'blaze-html-templates',
-  version: '1.0.2-rc.12',
+  name: 'nathantreid:blaze-modules',
+  version: '0.0.1',
+  // last MDG version: '1.0.2-rc.12',
   // Brief, one-line summary of the package.
   summary: 'Compile HTML templates into reactive UI with Meteor Blaze',
   // By default, Meteor will default to using README.md for documentation.
@@ -20,6 +21,6 @@ Package.onUse(function(api) {
     'spacebars', // XXX COMPAT WITH PACKAGES BUILT FOR 0.9.0
 
     // Compile .html files into Blaze reactive views
-    'templating'
+    'nathantreid:templating@0.0.1'
   ]);
 });
