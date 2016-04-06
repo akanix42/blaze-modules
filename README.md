@@ -4,7 +4,7 @@ Enables ES 2015 imports for Blaze templates using the `<component>` tag.
 Normal Blaze template are unaffected (you can use both in the same project).
 
 ## Installation
-`meteor remove blaze-html-template`
+`meteor remove blaze-html-templates`
 `meteor add nathantreid:blaze-modules`
 
 ## Example usage:
