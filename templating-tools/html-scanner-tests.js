@@ -37,21 +37,25 @@ Tinytest.add("templating-tools - html scanner", function (test) {
   var simpleTemplate = function (templateName, content) {
     // '"hello"' into '"Template.hello"'
     var viewName = templateName.slice(0, 1) + 'Template.' + templateName.slice(1);
-
+    var nameWithoutQuotes = templateName.slice(1,-1);
     return '\nTemplate.__checkName(' + templateName + ');\nTemplate[' + templateName +
       '] = new Template(' + viewName +
-      ', (function() {\n  var view = this;\n  return ' + content + ';\n}));\n';
+      ', (function() {\n  var view = this;\n  return ' + content + ';\n}));\n' +
+      (nameWithoutQuotes.match(/^[^a-zA-Z_$]|[^0-9a-zA-Z_$]/) ? '' :
+      'export { Template["' + nameWithoutQuotes + '"] as favoritefood };\n');
   };
 
   // arguments are quoted strings like '"hello"'
   var simpleComponent = function (templateName, content) {
     // '"hello"' into '"Template.hello"'
     var viewName = templateName.slice(0, 1) + 'Template.' + templateName.slice(1);
+    var nameWithoutQuotes = templateName.slice(1,-1);
 
     return '\nTemplate.__checkComponentName(' + templateName + ');\n' +
-      'const component = new Template(' + viewName +
+      'const ' + nameWithoutQuotes + ' = new Template(' + viewName +
       ', (function() {\n  var view = this;\n  return ' + content + ';\n}));\n' +
-      'export default component;\n';
+      'export { ' + nameWithoutQuotes + ' };\n' +
+      'export default ' + nameWithoutQuotes + ';\n';
   };
 
   var checkResults = function(results, expectJs, expectHead, expectBodyAttrs) {
@@ -179,8 +183,8 @@ Tinytest.add("templating-tools - html scanner", function (test) {
   checkResults(
     scanForTest("<head>\n<title>Hello</title>\n</head>\n\n<body>World</body>\n\n"+
       '<template name="favoritefood">\n  pizza\n</template>\n'+
-      '<component name="favoritefood">\n  pizza\n</component>\n'),
-    simpleBody('"World"') + simpleTemplate('"favoritefood"', '"pizza"') + simpleComponent('"favoritefood"', '"pizza"'),
+      '<component name="favoritefood_component">\n  pizza\n</component>\n'),
+    simpleBody('"World"') + simpleTemplate('"favoritefood"', '"pizza"') + simpleComponent('"favoritefood_component"', '"pizza"') + '\nTemplate["favoritefood"].helpers({ favoritefood_component });\n\n',
     "<title>Hello</title>");
 
   // one-line component
@@ -205,13 +209,13 @@ Tinytest.add("templating-tools - html scanner", function (test) {
     scanForTest('<component name=" favoritefood  ">pizza</component>'),
     simpleComponent('"favoritefood"', '"pizza"'));
 
-  // single quotes around component name
-  checkResults(
-    scanForTest('<component name=\'the "cool" component\'>'+
-      'pizza</component>'),
-    simpleComponent('"the \\"cool\\" component"', '"pizza"'));
-
   checkResults(scanForTest('<body foo="bar">\n  Hello\n</body>'), simpleBody('"Hello"'), "", {foo: "bar"});
+
+  // invalid characters component
+  checkError(function() {
+    return scanForTest('<component name=\'the component\'>'+
+      'pizza</component>');
+  }, "valid", 1);
 
   // unnamed component
   checkError(function() {
@@ -219,11 +223,27 @@ Tinytest.add("templating-tools - html scanner", function (test) {
       "\n\n<component>Hi</component>\n\n<component>Hi</component>");
   }, "name", 3);
 
-  // multiple component
-  checkError(function() {
-    return scanForTest(
-      "\n\n<component name='test'>Hi</component>\n\n<component name='test2'>Hi</component>");
-  }, "Only one component allowed per file", 5);
+  // component helpers
+  checkResults(
+    scanForTest("\n\n<component name='test'>Hi</component>\n\n<component name='test2'>Hi</component>"),
+    '\n' +
+    'Template.__checkComponentName("test");\n' +
+    'const test = new Template("Template.test", (function() {\n' +
+    '  var view = this;\n' +
+    '  return "Hi";\n' +
+    '}));\n' +
+    'export { test };\n' +
+    '\n' +
+    'Template.__checkComponentName("test2");\n' +
+    'const test2 = new Template("Template.test2", (function() {\n' +
+    '  var view = this;\n' +
+    '  return "Hi";\n' +
+    '}));\n' +
+    'export { test2 };\n' +
+    'export default test;\n\n' +
+    'Template["test"].helpers({ test2 });\n\n'
+  );
+
 
   // helpful doctype message
   checkError(function() {

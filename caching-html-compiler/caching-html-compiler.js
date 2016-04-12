@@ -134,7 +134,7 @@ CachingHtmlCompiler = class CachingHtmlCompiler extends CachingCompiler {
 
       inputFile.addJavaScript({
         path: path.join(pathPart, "template." + basename + ".js"),
-        data: compileResult.hasModule ? Babel.compile(allJavaScript).code : allJavaScript
+        data: Babel.compile(allJavaScript).code
       });
     }
   }

@@ -5,6 +5,8 @@ TemplatingTools.compileTagsWithSpacebars = function compileTagsWithSpacebars(tag
     handler.addTagToResults(tag);
   });
 
+  handler.addDefaultExport();
+  handler.addComponentHelpers();
   return handler.getResults();
 };
 
@@ -14,13 +16,34 @@ class SpacebarsTagCompiler {
       head: '',
       body: '',
       js: '',
-      bodyAttrs: {},
-      hasModule: false
+      bodyAttrs: {}
     };
+    this.tagsInOrder = [];
+    this.componentsBelowTagMap = {};
+    this.hasComponents = false;
+    this.firstComponentName = null;
+    this.templatesByName = {};
+    this.componentsByName = {};
   }
 
   getResults() {
     return this.results;
+  }
+
+  recordTemplate(name) {
+    this.tagsInOrder.push(name);
+    this.templatesByName[name] = 1;
+    this.componentsBelowTagMap[name] = [];
+  }
+
+  recordComponentBelow(name) {
+    this.recordTemplate(name);
+    this.componentsByName[name] = 1;
+    if (!this.firstComponentName)
+      this.firstComponentName = name;
+
+    for (let i = 0; i < this.tagsInOrder.length - 1; i++)
+      this.componentsBelowTagMap[this.tagsInOrder[i]].push(name);
   }
 
   addTagToResults(tag) {
@@ -60,7 +83,8 @@ class SpacebarsTagCompiler {
 
         this.results.js += TemplatingTools.generateTemplateJS(
           name, renderFuncCode);
-      }else if (this.tag.tagName === "component") {
+        this.recordTemplate(name);
+      } else if (this.tag.tagName === "component") {
         this.processComponent();
       } else if (this.tag.tagName === "body") {
         this.addBodyAttrs(this.tag.attribs);
@@ -85,7 +109,7 @@ class SpacebarsTagCompiler {
     }
   }
 
-  processComponent(filePath){
+  processComponent(filePath) {
     const name = this.tag.attribs.name;
 
     if (!name) {
@@ -96,8 +120,16 @@ class SpacebarsTagCompiler {
       this.throwCompileError(`Component can't be named "${name}"`);
     }
 
-    if (this.results.hasModule) {
-      this.throwCompileError('Only one component allowed per file')
+    if (name in this.templatesByName) {
+      this.throwCompileError(`A template named ("${name}") already exists in this file`);
+    }
+
+    if (name in this.componentsByName) {
+      this.throwCompileError(`A component named ("${name}") already exists in this file`);
+    }
+
+    if (name.match(/^[^a-zA-Z_$]|[^0-9a-zA-Z_$]/)) {
+      this.throwCompileError(`Component name "${name}" is not a valid JavaScript variable name.`);
     }
 
     const renderFuncCode = SpacebarsCompiler.compile(this.tag.contents, {
@@ -108,7 +140,8 @@ class SpacebarsTagCompiler {
     this.results.js += TemplatingTools.generateComponentJS(
       name, renderFuncCode);
 
-    this.results.hasModule = true;
+    this.recordComponentBelow(name);
+    this.hasComponents = true;
   }
 
   addBodyAttrs(attrs) {
@@ -129,5 +162,27 @@ class SpacebarsTagCompiler {
 
   throwCompileError(message, overrideIndex) {
     TemplatingTools.throwCompileError(this.tag, message, overrideIndex);
+  }
+
+  addDefaultExport() {
+    if (this.hasComponents) {
+      this.results.js += `export default ${this.firstComponentName};\n`;
+    }
+  }
+
+  addComponentHelpers() {
+    if (this.hasComponents) {
+      const helpers = this.tagsInOrder
+          .map((tagName)=>this.componentsBelowTagMap[tagName].length ?
+            `${this.getTemplateOrComponentReference(tagName)}.helpers({ ${this.componentsBelowTagMap[tagName].join(',')} });`
+            : '')
+          .join('\n');
+      if (helpers)
+        this.results.js += `\n${helpers}\n`;
+    }
+  }
+
+  getTemplateOrComponentReference(name) {
+    return name in this.templatesByName ? `Template["${name}"]` : name;
   }
 }
