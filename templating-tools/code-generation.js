@@ -8,7 +8,10 @@ Template.__checkName(${nameLiteral});
 Template[${nameLiteral}] = new Template(${templateDotNameLiteral}, ${renderFuncCode});
 `;
   if (! name.match(/^[^a-zA-Z_$]|[^0-9a-zA-Z_$]/))
-    code += `export { Template[${nameLiteral}] as ${name} };\n`;
+    code += `
+const ${name} = Template[${nameLiteral}];
+export { ${name} };
+`;
   else if (process.env.BLAZE_DEBUG === '1')
     console.warn('Template ${name} cannot be exported because it is not a valid JavaScript variable name.');
 

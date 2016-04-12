@@ -42,7 +42,8 @@ Tinytest.add("templating-tools - html scanner", function (test) {
       '] = new Template(' + viewName +
       ', (function() {\n  var view = this;\n  return ' + content + ';\n}));\n' +
       (nameWithoutQuotes.match(/^[^a-zA-Z_$]|[^0-9a-zA-Z_$]/) ? '' :
-      'export { Template["' + nameWithoutQuotes + '"] as favoritefood };\n');
+      '\nconst ' + nameWithoutQuotes + ' = Template[' + templateName + '];\n' +
+      'export { ' + nameWithoutQuotes + ' };\n');
   };
 
   var simpleTemplateDefaultExport = function(templateName, content) {
