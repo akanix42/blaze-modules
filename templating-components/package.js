@@ -1,7 +1,7 @@
 Package.describe({
   summary: "Allows templates to be defined in .html files",
   name: 'nathantreid:templating-components',
-  version: '0.0.2',
+  version: '0.0.3',
   // last MDG version: '1.1.7-rc.12'
   git:'https://github.com/nathantreid/blaze-modules'
 });
@@ -22,7 +22,7 @@ Package.registerBuildPlugin({
   use: [
     'nathantreid:caching-html-compiler@0.0.2',
     'ecmascript@0.4.1-rc.12',
-    'nathantreid:templating-tools@0.0.1'
+    'nathantreid:templating-tools@0.0.2'
   ],
   sources: [
     'plugin/compile-templates.js'
