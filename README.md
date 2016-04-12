@@ -30,3 +30,46 @@ import component2 from './component2.html';
 
 component1.helpers{{ component2 });
 ```
+
+## Multiple components in one file
+
+The first component in the file is exported as the default as well as by name; all other components and templates are exported by name:
+
+components.html
+``` handlebars
+<component name="a_component">
+1 2 3.
+</component>
+
+<component name="another_component">
+1 2 3.
+</component>
+```
+
+components.js
+``` js
+import theFirstComponent, { a_component, another_component }_ from './components.html';
+// theFirstComponent === a_component // is true
+```
+
+All components below a given template or component in the same file are automatically added as helpers to that template:
+components.html
+``` handlebars
+<component name="a_component">
+ {{>another_component}}_
+</component>
+
+<component name="another_component">
+1 2 3.
+</component>
+```
+
+components.js
+``` js
+import a_component from './components.js';
+
+// no helpers statement or import of the second component necessary, this code is automatically added by the compiler:
+/*
+a_component.helpers{{ another_component });
+*/
+```
