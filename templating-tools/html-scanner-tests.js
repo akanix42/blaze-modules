@@ -45,6 +45,10 @@ Tinytest.add("templating-tools - html scanner", function (test) {
       'export { Template["' + nameWithoutQuotes + '"] as favoritefood };\n');
   };
 
+  var simpleTemplateDefaultExport = function(templateName, content) {
+    return simpleTemplate(templateName, content) + 'export default Template[' + templateName + '];\n';
+  };
+
   // arguments are quoted strings like '"hello"'
   var simpleComponent = function (templateName, content) {
     // '"hello"' into '"Template.hello"'
@@ -54,11 +58,15 @@ Tinytest.add("templating-tools - html scanner", function (test) {
     return '\nTemplate.__checkComponentName(' + templateName + ');\n' +
       'const ' + nameWithoutQuotes + ' = new Template(' + viewName +
       ', (function() {\n  var view = this;\n  return ' + content + ';\n}));\n' +
-      'export { ' + nameWithoutQuotes + ' };\n' +
-      'export default ' + nameWithoutQuotes + ';\n';
+      'export { ' + nameWithoutQuotes + ' };\n';
   };
 
-  var checkResults = function(results, expectJs, expectHead, expectBodyAttrs) {
+  var simpleComponentDefaultExport = function(templateName, content) {
+    var nameWithoutQuotes = templateName.slice(1,-1);
+    return simpleComponent(templateName, content) + 'export default ' + nameWithoutQuotes + ';\n';
+  };
+
+      var checkResults = function(results, expectJs, expectHead, expectBodyAttrs) {
     test.equal(results.body, '');
     test.equal(results.js, expectJs || '');
     test.equal(results.head, expectHead || '');
@@ -111,36 +119,36 @@ Tinytest.add("templating-tools - html scanner", function (test) {
   checkResults(
     scanForTest("<head>\n<title>Hello</title>\n</head>\n\n<body>World</body>\n\n"+
                       '<template name="favoritefood">\n  pizza\n</template>\n'),
-    simpleBody('"World"') + simpleTemplate('"favoritefood"', '"pizza"'),
+    simpleBody('"World"') + simpleTemplateDefaultExport('"favoritefood"', '"pizza"'),
     "<title>Hello</title>");
 
   // one-line template
   checkResults(
     scanForTest('<template name="favoritefood">pizza</template>'),
-    simpleTemplate('"favoritefood"', '"pizza"'));
+    simpleTemplateDefaultExport('"favoritefood"', '"pizza"'));
 
   // template with other attributes
   checkResults(
     scanForTest('<template foo="bar" name="favoritefood" baz="qux">'+
                       'pizza</template>'),
-    simpleTemplate('"favoritefood"', '"pizza"'));
+    simpleTemplateDefaultExport('"favoritefood"', '"pizza"'));
 
   // whitespace around '=' in attributes and at end of tag
   checkResults(
     scanForTest('<template foo = "bar" name  ="favoritefood" baz= "qux"  >'+
                       'pizza</template\n\n>'),
-    simpleTemplate('"favoritefood"', '"pizza"'));
+    simpleTemplateDefaultExport('"favoritefood"', '"pizza"'));
 
   // whitespace around template name
   checkResults(
     scanForTest('<template name=" favoritefood  ">pizza</template>'),
-    simpleTemplate('"favoritefood"', '"pizza"'));
+    simpleTemplateDefaultExport('"favoritefood"', '"pizza"'));
 
   // single quotes around template name
   checkResults(
     scanForTest('<template name=\'the "cool" template\'>'+
                       'pizza</template>'),
-    simpleTemplate('"the \\"cool\\" template"', '"pizza"'));
+    simpleTemplateDefaultExport('"the \\"cool\\" template"', '"pizza"'));
 
   checkResults(scanForTest('<body foo="bar">\n  Hello\n</body>'), simpleBody('"Hello"'), "", {foo: "bar"});
 
@@ -176,7 +184,7 @@ Tinytest.add("templating-tools - html scanner", function (test) {
   checkResults(
     scanForTest("<head>\n<title>Hello</title>\n</head>\n\n<body>World</body>\n\n"+
       '<component name="favoritefood">\n  pizza\n</component>\n'),
-    simpleBody('"World"') + simpleComponent('"favoritefood"', '"pizza"'),
+    simpleBody('"World"') + simpleComponentDefaultExport('"favoritefood"', '"pizza"'),
     "<title>Hello</title>");
 
   // head, body, template, and component
@@ -184,30 +192,33 @@ Tinytest.add("templating-tools - html scanner", function (test) {
     scanForTest("<head>\n<title>Hello</title>\n</head>\n\n<body>World</body>\n\n"+
       '<template name="favoritefood">\n  pizza\n</template>\n'+
       '<component name="favoritefood_component">\n  pizza\n</component>\n'),
-    simpleBody('"World"') + simpleTemplate('"favoritefood"', '"pizza"') + simpleComponent('"favoritefood_component"', '"pizza"') + '\nTemplate["favoritefood"].helpers({ favoritefood_component });\n\n',
+      simpleBody('"World"') + simpleTemplate('"favoritefood"', '"pizza"') +
+      simpleComponent('"favoritefood_component"', '"pizza"') +
+      'export default Template["favoritefood"];\n\n' +
+      'Template["favoritefood"].helpers({ favoritefood_component });\n\n',
     "<title>Hello</title>");
 
   // one-line component
   checkResults(
     scanForTest('<component name="favoritefood">pizza</component>'),
-    simpleComponent('"favoritefood"', '"pizza"'));
+    simpleComponentDefaultExport('"favoritefood"', '"pizza"'));
 
   // component with other attributes
   checkResults(
     scanForTest('<component foo="bar" name="favoritefood" baz="qux">'+
       'pizza</component>'),
-    simpleComponent('"favoritefood"', '"pizza"'));
+    simpleComponentDefaultExport('"favoritefood"', '"pizza"'));
 
   // whitespace around '=' in attributes and at end of tag
   checkResults(
     scanForTest('<component foo = "bar" name  ="favoritefood" baz= "qux"  >'+
       'pizza</component\n\n>'),
-    simpleComponent('"favoritefood"', '"pizza"'));
+    simpleComponentDefaultExport('"favoritefood"', '"pizza"'));
 
   // whitespace around component name
   checkResults(
     scanForTest('<component name=" favoritefood  ">pizza</component>'),
-    simpleComponent('"favoritefood"', '"pizza"'));
+    simpleComponentDefaultExport('"favoritefood"', '"pizza"'));
 
   checkResults(scanForTest('<body foo="bar">\n  Hello\n</body>'), simpleBody('"Hello"'), "", {foo: "bar"});
 
@@ -241,7 +252,7 @@ Tinytest.add("templating-tools - html scanner", function (test) {
     '}));\n' +
     'export { test2 };\n' +
     'export default test;\n\n' +
-    'Template["test"].helpers({ test2 });\n\n'
+    'test.helpers({ test2 });\n\n'
   );
 
 

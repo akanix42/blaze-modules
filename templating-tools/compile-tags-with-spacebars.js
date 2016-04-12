@@ -30,15 +30,19 @@ class SpacebarsTagCompiler {
     return this.results;
   }
 
-  recordTemplate(name) {
+  recordTag(name) {
     this.tagsInOrder.push(name);
-    this.templatesByName[name] = 1;
     this.componentsBelowTagMap[name] = [];
   }
 
+  recordTemplate(name) {
+    this.templatesByName[name] = 1;
+    this.recordTag(name);
+  }
+
   recordComponentBelow(name) {
-    this.recordTemplate(name);
     this.componentsByName[name] = 1;
+    this.recordTag(name);
     if (!this.firstComponentName)
       this.firstComponentName = name;
 
@@ -165,8 +169,8 @@ class SpacebarsTagCompiler {
   }
 
   addDefaultExport() {
-    if (this.hasComponents) {
-      this.results.js += `export default ${this.firstComponentName};\n`;
+    if (this.tagsInOrder.length) {
+      this.results.js += `export default ${this.getTemplateOrComponentReference(this.tagsInOrder[0])};\n`;
     }
   }
 
@@ -183,6 +187,6 @@ class SpacebarsTagCompiler {
   }
 
   getTemplateOrComponentReference(name) {
-    return name in this.templatesByName ? `Template["${name}"]` : name;
+    return name in this.templatesByName ? `Template[${JSON.stringify(name)}]` : name;
   }
 }
