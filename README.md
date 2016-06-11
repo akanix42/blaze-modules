@@ -28,7 +28,7 @@ component1.js
 import component1 from './component1.html';
 import component2 from './component2.html';
 
-component1.helpers{{ component2 });
+component1.helpers({ component2 });
 ```
 
 ## Multiple components in one file
@@ -70,6 +70,6 @@ import a_component from './components.js';
 
 // no helpers statement or import of the second component necessary, this code is automatically added by the compiler:
 /*
-a_component.helpers{{ another_component });
+a_component.helpers({ another_component });
 */
 ```
