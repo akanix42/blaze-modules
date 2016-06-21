@@ -1,8 +1,8 @@
 Package.describe({
   summary: "Allows templates to be defined in .html files",
   name: 'nathantreid:templating-components',
-  version: '0.0.3',
-  // last MDG version: '1.1.7-rc.12'
+  version: '0.0.4',
+  // last MDG version: 'templating@1.1.11'
   git:'https://github.com/nathantreid/blaze-modules'
 });
 
@@ -20,9 +20,9 @@ Package.registerBuildPlugin({
   // XXX maybe uglify should be applied by this plugin instead of via magic
   // weak dependency.
   use: [
-    'nathantreid:caching-html-compiler@0.0.2',
-    'ecmascript@0.4.1-rc.12',
-    'nathantreid:templating-tools@0.0.2'
+    'nathantreid:caching-html-compiler@0.0.4',
+    'ecmascript@0.4.5',
+    'nathantreid:templating-tools@0.0.3'
   ],
   sources: [
     'plugin/compile-templates.js'
@@ -31,19 +31,20 @@ Package.registerBuildPlugin({
 
 // This onUse describes the *runtime* implications of using this package.
 Package.onUse(function (api) {
-  // XXX would like to do the following only when the first html file
+  api.versionsFrom('1.3.3.1');
+// XXX would like to do the following only when the first html file
   // is encountered
-  api.use('nathantreid:templating-wrapper@0.0.1');
+  api.use('nathantreid:templating-wrapper@0.0.2');
   api.addFiles('templating.js', 'client');
   api.export('Template', 'client');
 
-  api.use('underscore@1.0.6-rc.12'); // only the subset in packages/blaze/microscore.js
+  api.use('underscore@1.0.9'); // only the subset in packages/blaze/microscore.js
 
   api.use('isobuild:compiler-plugin@1.0.0');
 
   // html_scanner.js emits client code that calls Meteor.startup and
   // Blaze, so anybody using templating (eg apps) need to implicitly use
   // 'meteor' and 'blaze'.
-  api.use(['blaze@2.1.5-rc.12', 'spacebars@1.0.9-rc.12']);
+  api.use(['blaze@2.1.8', 'spacebars@1.0.12']);
   api.imply(['meteor', 'blaze', 'spacebars'], 'client');
 });

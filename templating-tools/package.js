@@ -1,17 +1,18 @@
 Package.describe({
   name: 'nathantreid:templating-tools',
-  version: '0.0.2',
-  // last MDG version: '1.0.2-rc.12',
+  version: '0.0.3',
+  // last MDG version: '1.0.4',
   summary: 'Tools to scan HTML and compile tags when building a templating package',
   git:'https://github.com/nathantreid/blaze-modules',
   documentation: 'README.md'
 });
 
 Package.onUse(function(api) {
+  api.versionsFrom('1.3.3.1');
   api.use([
-    'underscore@1.0.6-rc.12',
-    'ecmascript@0.4.1-rc.12',
-    'spacebars-compiler@1.0.9-rc.12',
+    'underscore@1.0.9',
+    'ecmascript@0.4.5',
+    'spacebars-compiler@1.0.12',
 
     // minifier-js is a weak dependency of spacebars-compiler; adding it here
     // ensures that the output is minified.  (Having it as a weak dependency means
@@ -19,7 +20,7 @@ Package.onUse(function(api) {
     // boilerplate-generator uses spacebars-compiler.)
     // XXX maybe uglify should be applied by this plugin instead of via magic
     // weak dependency.
-    'minifier-js@1.1.9-rc.12'
+    'minifier-js@1.1.12'
   ]);
 
   api.addFiles([
@@ -37,7 +38,7 @@ Package.onTest(function(api) {
   api.use([
     'tinytest',
     'nathantreid:templating-tools',
-    'ecmascript@0.4.1-rc.12'
+    'ecmascript@0.4.5'
   ]);
 
   api.addFiles('html-scanner-tests.js', 'server');

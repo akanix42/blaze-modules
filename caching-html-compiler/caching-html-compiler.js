@@ -131,7 +131,8 @@ CachingHtmlCompiler = class CachingHtmlCompiler extends CachingCompiler {
       const basename = path.basename(filePath, ext);
 
       // XXX generate a source map
-
+      console.log('babel:', path.join(pathPart, "template." + basename + ".js"))
+      console.log(Babel.compile(allJavaScript).code);
       inputFile.addJavaScript({
         path: path.join(pathPart, "template." + basename + ".js"),
         data: Babel.compile(allJavaScript).code
