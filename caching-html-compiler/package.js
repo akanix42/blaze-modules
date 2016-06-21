@@ -1,6 +1,6 @@
 Package.describe({
   name: 'nathantreid:caching-html-compiler',
-  version: '0.0.4',
+  version: '0.0.5',
   // last MDG version: '1.0.6',
   // Brief, one-line summary of the package.
   summary: 'Pluggable class for compiling HTML into templates',

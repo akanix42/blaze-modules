@@ -1,7 +1,7 @@
 Package.describe({
   summary: "Allows templates to be defined in .html files",
   name: 'nathantreid:templating-components',
-  version: '0.0.4',
+  version: '0.0.5',
   // last MDG version: 'templating@1.1.11'
   git:'https://github.com/nathantreid/blaze-modules'
 });
@@ -20,7 +20,7 @@ Package.registerBuildPlugin({
   // XXX maybe uglify should be applied by this plugin instead of via magic
   // weak dependency.
   use: [
-    'nathantreid:caching-html-compiler@0.0.4',
+    'nathantreid:caching-html-compiler@0.0.5',
     'ecmascript@0.4.5',
     'nathantreid:templating-tools@0.0.3'
   ],
