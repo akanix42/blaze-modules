@@ -15,7 +15,7 @@ Package.onUse(function(api) {
   api.use([
     'underscore@1.0.9',
     'caching-compiler@1.0.5',
-    'nathantreid:templating-tools@0.0.3',
+    'nathantreid:templating-tools@0.0.4',
     'ecmascript@0.4.5',
     'babel-compiler@6.8.2',
 
