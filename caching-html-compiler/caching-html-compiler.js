@@ -55,7 +55,7 @@ CachingHtmlCompiler = class CachingHtmlCompiler extends CachingCompiler {
       const tags = this.tagScannerFunc({
         sourceName: inputPath,
         contents: contents,
-        tagNames: ["body", "head", "template", "component"]
+        tagNames: ["body", "head", "template", "component", "script"]
       });
 
       return this.tagHandlerFunc(tags);

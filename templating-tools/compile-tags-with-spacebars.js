@@ -100,8 +100,10 @@ class SpacebarsTagCompiler {
 
         // We may be one of many `<body>` tags.
         this.results.js += TemplatingTools.generateBodyJS(renderFuncCode);
+      } else if (this.tag.tagName === "script") {
+        this.results.js += `\n${this.tag.contents}\n`;
       } else {
-        this.throwCompileError("Expected <template>, <component>, <head>, or <body> tag in template file", tagStartIndex);
+        this.throwCompileError("Expected <template>, <component>, <script>, <head>, or <body> tag in template file", tagStartIndex);
       }
     } catch (e) {
       if (e.scanner) {
