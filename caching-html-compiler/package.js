@@ -1,6 +1,6 @@
 Package.describe({
   name: 'nathantreid:caching-html-compiler',
-  version: '0.0.6',
+  version: '0.0.7',
   // last MDG version: '1.0.6',
   // Brief, one-line summary of the package.
   summary: 'Pluggable class for compiling HTML into templates',
@@ -11,13 +11,13 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.3.3.1');
+  api.versionsFrom('1.5.1');
   api.use([
-    'underscore@1.0.9',
-    'caching-compiler@1.0.5',
-    'nathantreid:templating-tools@0.0.4',
-    'ecmascript@0.4.5',
-    'babel-compiler@6.8.2',
+    'underscore@1.0.10',
+    'caching-compiler@1.1.9',
+    'nathantreid:templating-tools@0.0.5',
+    'ecmascript@0.8.1',
+    'babel-compiler@6.19.4',
 
   ]);
 
