@@ -1,6 +1,6 @@
 Package.describe({
   name: 'nathantreid:templating-tools',
-  version: '0.0.5',
+  version: '0.0.6',
   // last MDG version: '1.0.4',
   summary: 'Tools to scan HTML and compile tags when building a templating package',
   git:'https://github.com/nathantreid/blaze-modules',

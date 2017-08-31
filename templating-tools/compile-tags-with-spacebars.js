@@ -116,13 +116,11 @@ class SpacebarsTagCompiler {
   }
 
   processComponent(filePath) {
-    const name = this.tag.attribs.name;
+    const hasNameAttribute = !!this.tag.attribs.name;
+    const defaultName = '_default';
+    const name = this.tag.attribs.name || defaultName;
 
-    if (!name) {
-      this.throwCompileError("Component has no 'name' attribute");
-    }
-
-    if (SpacebarsCompiler.isReservedName(name)) {
+    if (SpacebarsCompiler.isReservedName(name) || name === 'default') {
       this.throwCompileError(`Component can't be named "${name}"`);
     }
 
@@ -131,7 +129,11 @@ class SpacebarsTagCompiler {
     }
 
     if (name in this.componentsByName) {
-      this.throwCompileError(`A component named ("${name}") already exists in this file`);
+      if (name === defaultName) {
+        this.throwCompileError(`A default component already exists in this file. All other components in this file must use the "name" attribute`);
+      } else {
+        this.throwCompileError(`A component named ("${name}") already exists in this file`);
+      }
     }
 
     if (name.match(/^[^a-zA-Z_$]|[^0-9a-zA-Z_$]/)) {
